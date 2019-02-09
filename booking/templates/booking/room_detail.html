@@ -1,0 +1,161 @@
+{% extends 'booking/base.html' %}
+
+{% block style %}
+{{ block.super }}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.room_image
+{
+    width: 600px;
+    min-height: 120px;
+    max-height: auto;
+    float: left;
+    padding: 20px;
+}
+
+.details
+{
+    float: none;
+    padding: 10px;
+    margin-left: 20px;
+}
+
+.empty-div
+{
+    clear: both;
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="room_image">
+    <a> <img src="{{ room.avatar.url }}"> </a>
+</div>
+
+<div class="details">
+    <h1>Description</h1>
+    <p><font size="4">{{ room.description }} </font></p>
+    <p><font size="6"> Price: ${{ room.price }} </font></p>
+</div>
+
+<div class="empty-div">
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12" style="text-align: center;">
+            <h3><i class="fa fa-bed" aria-hidden="true"></i> Type: {{ room.room_type.room_type }}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" style="text-align: center;">
+            <h3>Standard: {{ room.room_type.room_standard }}</h3>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-12" style="text-align: center;">
+            <a class="btn btn-lg btn-primary" href="{% url 'booking:room_bookit' room.id %}" role="button">Book It!</a>
+        </div>
+    </div>
+
+    <hr/>
+
+
+    {% if comments %}
+        <div class="row">
+            <div class="col-md-10 col-sm-offset-1">
+                <h2>Comments:</h2>
+            </div>
+        </div>
+    <div class="container">
+        {% for comment in comments %}
+
+        <div class="well">
+            <div class="media">
+                <div class="media-body">
+                    <h4 class="media-heading"><b>by:</b> <b style="color: #5db7de;">{{ comment.user.username }}</b></h4>
+                    <p class="text-right"></p>
+                    <p>{{ comment.context }}</p>
+                    <ul class="list-inline list-unstyled">
+                        <li><span><i class="glyphicon glyphicon-calendar"></i> {{ comment.date }}</span></li>
+                        <li>|</li>
+                        <li>
+                            <b>{{ comment.rating.rate }}</b>
+                            {% for i in "xxxxxxxxxx" %}
+                                {% if forloop.counter <= comment.rating.rate %}
+                                    <span class="glyphicon glyphicon-star" style="color: #f2b01e;"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {%endfor %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if comments.has_previous %}
+                <a href="?{{ page_var }}={{ comments.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ comments.number }} of {{ comments.paginator.num_pages }}.
+                </span>
+
+                {% if comments.has_next %}
+                    <a href="?{{ page_var }}={{ comments.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-10 col-sm-offset-1">
+                <h2>There is no comments.</h2>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+	<div class="row">
+		<div class="col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="controls controls-row">
+                    <input name="rating" type="number" class="col-md-4 col-sm-offset-2" placeholder="Your rating" min="1" max="10">
+                </div>
+                <br/>
+                <div class="controls">
+                    <textarea name="content" class="col-md-8 col-sm-offset-2" placeholder="Your Message" rows="5"></textarea>
+                </div>
+
+                <div class="controls col-md-2 col-sm-offset-5">
+                    <button id="contact-submit" type="submit" class="btn btn-primary input-medium pull-right">Send</button>
+                </div>
+            </form>
+        </div>
+	</div>
+    <br/>
+    {% endif %}
+</div>
+
+{% if request.user.is_authenticated and user.is_superuser and room.hotel.owner.id == user.id %}
+<div style="text-align: center;">
+    <a class="btn btn-lg btn-primary" href="{% url 'booking:room_delete' room_id=room.id %}" role="button">Delete</a>
+</div>
+{% endif %}
+
+
+{% endblock %}

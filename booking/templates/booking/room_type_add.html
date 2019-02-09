@@ -1,0 +1,37 @@
+{% extends 'booking/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+{% if request.user.is_authenticated and user.is_superuser %}
+<div class="row">
+  <div class="col-md-4 col-sm-offset-4">
+
+      <h1>Add Room Type</h1>
+
+    <form id="post_form" method="post" action=""
+          enctype="multipart/form-data">
+        {{ roomTypeForm|crispy }}
+        {% csrf_token %}
+
+        <br>
+        <div style="text-align:center;">
+        <input class="btn btn-lg btn-primary" type="submit" name="submit" value="Submit" />
+        </div>
+        <br>
+    </form>
+
+  </div>
+</div>
+
+{% else %}
+<div class="row">
+  <div class="col-md-6 col-sm-offset-3">
+      <h1>Only Admins can see this page</h1>
+      <a href="{% url 'auth_login' %}">Login</a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

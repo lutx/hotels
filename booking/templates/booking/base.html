@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://use.fontawesome.com/1598e5e6aa.js"></script>
+
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>{% block title %} BookIt {% endblock %}</title>
+
+    {% include 'booking/bootstrap_css.html' %}
+
+    <style>
+        {% block style %}
+            .navbar-inverse
+            {
+                background-color: #003580;
+            }
+        {% endblock %}
+    </style>
+
+</head>
+<body>
+
+    {% include 'booking/navbar.html' %}
+
+
+    <div class="container">
+
+        {% block jumbotron_content %}
+
+        {% endblock %}
+
+        <div id="content">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+
+
+
+    </div>
+</body>
+</html>

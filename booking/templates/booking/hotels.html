@@ -1,0 +1,84 @@
+{% extends 'booking/base.html' %}
+
+{% block style %}
+{{ block.super }}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.image_mrr
+{
+    width: 300px;
+    min-height: 120px;
+    max-height: auto;
+    float: left;
+    padding: 10px;
+}
+
+.hotel_detail
+{
+    float: left;
+    padding: 10px;
+}
+
+.empty-div
+{
+    clear: both;
+}
+
+
+{% endblock %}
+
+{%  block content %}
+
+    {% if hotels %}
+        {% for hotel in hotels %}
+
+            <div class="image_mrr">
+                <a> <img src="{{ hotel.avatar.url }}"> </a>
+            </div>
+
+            <div class="hotel_detail">
+                <a href="{% url 'booking:hotel_detail' hotel.id %}">
+                    <h2>{{ hotel.name }} {% if hotel.hotel_chain %} ({{ hotel.hotel_chain.chain_name }}) {% endif %}
+                        <span class="badge badge-success">{{ hotel.star_rating }}</span></h2></a>
+                <ul>
+                    <li>{{ hotel.address }}</li>
+                    <li>{{ hotel.city }}</li>
+                    <li>{{ hotel.country_code }}</li>
+                    <li>{{ hotel.email }}</li>
+                    <li>{{ hotel.phone_number }}</li>
+                    <li><a href="{{ hotel.url }}">Hotel's site</a> </li>
+                    <br>
+                </ul>
+            </div>
+
+            <div class="empty-div">
+            </div>
+
+        <hr/>
+        {% endfor %}
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if hotels.has_previous %}
+            <a href="?{{ page_var }}={{ hotels.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ hotels.number }} of {{ hotels.paginator.num_pages }}.
+            </span>
+
+            {% if hotels.has_next %}
+                <a href="?{{ page_var }}={{ hotels.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+    {% else %}
+        <h2>There is no hotels in database</h2>
+    {% endif %}
+
+{% endblock %}
