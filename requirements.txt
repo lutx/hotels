@@ -9,7 +9,7 @@ Django==1.11.18
 django-celery==3.2.2
 django-countries==5.3.2
 django-crispy-forms==1.7.2
-django-registration==3.0
+django-registration==3.1.2
 django-registration-redux==2.5
 django-registration2==0.9.4
 django-smart-selects==1.5.4
